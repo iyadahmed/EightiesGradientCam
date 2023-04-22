@@ -1,3 +1,4 @@
+import platform
 import cv2
 import numpy as np
 from math import floor
@@ -7,7 +8,9 @@ STEP_SIZE = 30  # The height of each row in pixels
 
 
 def main():
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(
+        0, cv2.CAP_DSHOW if platform.system() == "Windows" else cv2.CAP_ANY
+    )
     if not cap.isOpened():
         print("Failed to open video capture")
 
@@ -25,11 +28,11 @@ def main():
         # Denoise https://docs.opencv.org/4.7.0/d5/d69/tutorial_py_non_local_means.html
         # frame = cv2.fastNlMeansDenoising(frame)
 
-        frame = frame.astype('f')
+        frame = frame.astype("f")
 
         # frame = cv2.blur(frame, (10, 10))
         # frame = cv2.GaussianBlur(frame, (15, 15), 0)
-        frame *= .01
+        frame *= 0.01
 
         # Discretize image
         # frame = frame[0::STEP_SIZE, :].repeat(STEP_SIZE, axis=0)
